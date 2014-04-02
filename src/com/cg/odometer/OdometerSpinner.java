@@ -66,12 +66,12 @@ public class OdometerSpinner extends View {
 	{
 	    mBGGrad = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
                 new int[] { 0xFF000000, 0xFFAAAAAA, 0xFF000000 });
-	    
-	    mDigitString = "7";
 	     
 	    mDigitPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 	    mDigitPaint.setColor(Color.WHITE);
 	    mDigitPaint.setTextAlign(Align.CENTER);
+	    
+	    setCurrentDigit(4);
 	}
 
 	public void setCurrentDigit(int digit)
@@ -112,7 +112,7 @@ public class OdometerSpinner extends View {
 	 
 	    return result;
 	}
-	
+
 	//their methods
 	@Override
 	protected void onDraw(Canvas canvas) {
@@ -136,13 +136,8 @@ public class OdometerSpinner extends View {
 	    mBGGrad.setBounds(0, 0, w, h);
 	    
 	    mDigitPaint.setTextSize(h);
-	    
-	    Rect bounds = new Rect();
-	    mDigitPaint.getTextBounds(mDigitString, 0, 1, bounds);
-	     
-	    int textHeight = Math.abs(bounds.height());
 	     
 	    mDigitX = mWidth / 2;
-	    mDigitY = mHeight - ((mHeight - textHeight) / 2);
+	    setDigitYValues();
 	}
 }
