@@ -28,14 +28,20 @@ public class OdometerSpinner extends View {
 
     private String mDigitString;
     private Paint mDigitPaint;
-
     private float mDigitX;
     private float mDigitY;
-    
     private int mCurrentDigit;
-	private float mTouchStartY;
+    
 	private float mTouchLastY;
+	private float mTouchStartY;
 
+	private int mDigitAbove;
+	private int mDigitBelow;
+	private float mDigitAboveY;
+	private float mDigitBelowY;
+	private String mDigitAboveString;
+	private String mDigitBelowString;
+	
     //constructors
 	/**
 	 * @param context
@@ -86,14 +92,30 @@ public class OdometerSpinner extends View {
 	     */
 	    int newVal = digit;
 	 
+	    
 	    if(newVal < 0)
 	        newVal = 0;
 	    if(newVal > 9)
 	        newVal = 9;
 	 
 	    mCurrentDigit = newVal;
+	    
+	 // Digit above - greater
+	    mDigitAbove = mCurrentDigit + 1;
+	     
+	    if(mDigitAbove > 9)
+	        mDigitAbove = 0;
+	     
+	    // digit below - lower
+	    mDigitBelow = mCurrentDigit - 1;
+	     
+	    if(mDigitBelow < 0)
+	        mDigitBelow = 9;
+
 	    mDigitString = String.valueOf(mCurrentDigit);
-	 
+	    mDigitAboveString = String.valueOf(mDigitAbove);
+	    mDigitBelowString = String.valueOf(mDigitBelow);
+	    
 	    setDigitYValues();
 	    invalidate();
 	}
@@ -101,6 +123,8 @@ public class OdometerSpinner extends View {
 	private void setDigitYValues()
 	{
 	    mDigitY = findCenterY(mCurrentDigit);
+	    mDigitAboveY = findCenterY(mDigitAbove) - mHeight;
+	    mDigitBelowY = mHeight + findCenterY(mDigitBelow);
 	}
 	 
 	private float findCenterY(int digit)
@@ -122,6 +146,8 @@ public class OdometerSpinner extends View {
 		super.onDraw(canvas);
 		mBGGrad.draw(canvas);
 		canvas.drawText(mDigitString, mDigitX, mDigitY, mDigitPaint);
+		canvas.drawText(mDigitAboveString, mDigitX, mDigitAboveY, mDigitPaint);
+	    canvas.drawText(mDigitBelowString, mDigitX, mDigitBelowY, mDigitPaint);
 	}
 
 	@Override
@@ -147,6 +173,7 @@ public class OdometerSpinner extends View {
 	public boolean onTouchEvent(MotionEvent event)
 	{
 	    // Pull out the Action value from the event for processing
+			
 	    int action = event.getAction();
 	 
 	    if(action == MotionEvent.ACTION_DOWN)
@@ -164,13 +191,41 @@ public class OdometerSpinner extends View {
 	        mTouchLastY = currentY;
 	 
 	        mDigitY -= delta;
+	        mDigitAboveY -= delta;
+	        mDigitBelowY -= delta;
 	 
 	        invalidate();
 	 
 	        return true;
 	    }
-	    //... ACTION_UP...
-	    return true;
+	    else if(action == MotionEvent.ACTION_UP)
+	    {
+	    	float currentY = event.getY();
+	    	 
+	        // delta: negative means a down 'scroll'
+	        float deltaY = mTouchStartY - currentY;
+	 
+	        int newValue = mCurrentDigit;
+	 
+	        if(Math.abs(deltaY) > (mHeight / 3) )
+	        {
+	            // higher numbers are 'above' the current, so a scroll down
+	            // _increases_ the value
+	            if(deltaY < 0)
+	            {
+	            	newValue = mDigitAbove;
+	            }
+	            else
+	            {
+	            	newValue = mDigitBelow;
+	            }
+	        }
+	 
+	        setCurrentDigit(newValue);
+	 
+	        return true;
+	    }
+	    return false;
 	}
-	
+
 }
