@@ -12,6 +12,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 /**
@@ -32,6 +33,8 @@ public class OdometerSpinner extends View {
     private float mDigitY;
     
     private int mCurrentDigit;
+	private float mTouchStartY;
+	private float mTouchLastY;
 
     //constructors
 	/**
@@ -140,4 +143,34 @@ public class OdometerSpinner extends View {
 	    mDigitX = mWidth / 2;
 	    setDigitYValues();
 	}
+	
+	public boolean onTouchEvent(MotionEvent event)
+	{
+	    // Pull out the Action value from the event for processing
+	    int action = event.getAction();
+	 
+	    if(action == MotionEvent.ACTION_DOWN)
+	    {
+	        mTouchStartY = event.getY();
+	        mTouchLastY = mTouchStartY;
+	 
+	        return true;
+	    }
+	    else if(action == MotionEvent.ACTION_MOVE)
+	    {
+	        float currentY = event.getY();
+	 
+	        float delta = mTouchLastY - currentY;
+	        mTouchLastY = currentY;
+	 
+	        mDigitY -= delta;
+	 
+	        invalidate();
+	 
+	        return true;
+	    }
+	    //... ACTION_UP...
+	    return true;
+	}
+	
 }
