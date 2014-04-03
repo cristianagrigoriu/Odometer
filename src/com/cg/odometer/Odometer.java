@@ -14,6 +14,8 @@ public class Odometer extends TableLayout {
 	
 	private int mCurrentValue;
 	
+	private OnValueChangeListener mValueChangeListener;
+	
 	public Odometer(Context context) {
 		super(context);
 		// TODO Auto-generated constructor stub
@@ -48,6 +50,17 @@ public class Odometer extends TableLayout {
 	        findViewById(R.id.widget_odometer_spinner_10k);
 	    mDigitSpinners[5] = (OdometerSpinner)
 	        findViewById(R.id.widget_odometer_spinner_100k);    
+	    
+	    for(OdometerSpinner s : mDigitSpinners)
+        {
+            s.setOnDigitChangeListener(new OdometerSpinner.OnDigitChangeListener()
+            {
+                public void onDigitChange(OdometerSpinner s, int newDigit)
+                {
+                    updateValue();
+                }
+            });
+        }
 	}
 	
 	public int getValue()
@@ -72,6 +85,32 @@ public class Odometer extends TableLayout {
 	        value /= 10;
 	    }
 	}
+	
+	private void updateValue()
+    {
+        int value = 0;
+         
+        for(int i = NUM_DIGITS - 1; i >= 0; --i)
+        {
+            value = 10 * value + mDigitSpinners[i].getCurrentDigit();
+        }
+         
+        int old = mCurrentValue;
+        mCurrentValue = value;
+         
+        if(old != mCurrentValue && mValueChangeListener != null)
+            mValueChangeListener.onValueChange(this, mCurrentValue);
+    }
+    
+    public void setOnValueChangeListener(OnValueChangeListener listener)
+    {
+        mValueChangeListener = listener;
+    }
+    //...
+    public interface OnValueChangeListener
+    {
+        abstract void onValueChange(Odometer sender, int newValue);
+    }
 	
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
 	{

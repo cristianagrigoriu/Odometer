@@ -45,6 +45,8 @@ public class OdometerSpinner extends View {
 	
 	public static final float IDEAL_ASPECT_RATIO = 1.5f;
 	
+	private OnDigitChangeListener mDigitChangeListener;
+	
     //constructors
 	/**
 	 * @param context
@@ -108,7 +110,12 @@ public class OdometerSpinner extends View {
 	    if(newVal > 9)
 	        newVal = 9;
 	 
+	    int old = mCurrentDigit;
 	    mCurrentDigit = newVal;
+	    
+	    if(mCurrentDigit != old && mDigitChangeListener != null)
+            mDigitChangeListener.onDigitChange(this, mCurrentDigit);
+
 	    
 	 // Digit above - greater
 	    mDigitAbove = mCurrentDigit + 1;
@@ -130,6 +137,16 @@ public class OdometerSpinner extends View {
 	    invalidate();
 	}
 
+	public void setOnDigitChangeListener(OnDigitChangeListener listener)
+    {
+        mDigitChangeListener = listener;
+    }
+    //...
+    public interface OnDigitChangeListener
+    {
+        abstract void onDigitChange(OdometerSpinner sender, int newDigit);
+    }
+	
 	private void setDigitYValues()
 	{
 	    mDigitY = findCenterY(mCurrentDigit);
