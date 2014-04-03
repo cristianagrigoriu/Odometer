@@ -11,6 +11,7 @@ import android.graphics.Paint.Align;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -42,6 +43,8 @@ public class OdometerSpinner extends View {
 	private String mDigitAboveString;
 	private String mDigitBelowString;
 	
+	public static final float IDEAL_ASPECT_RATIO = 1.5f;
+	
     //constructors
 	/**
 	 * @param context
@@ -70,6 +73,8 @@ public class OdometerSpinner extends View {
 		initialize();
 	}
 
+	
+	
 	//our methods
 	private void initialize()
 	{
@@ -80,9 +85,14 @@ public class OdometerSpinner extends View {
 	    mDigitPaint.setColor(Color.WHITE);
 	    mDigitPaint.setTextAlign(Align.CENTER);
 	    
-	    setCurrentDigit(4);
+	    setCurrentDigit(0);
 	}
 
+	public int getCurrentDigit()
+	{
+	    return mCurrentDigit;
+	}
+	
 	public void setCurrentDigit(int digit)
 	{
 	    /*
@@ -153,6 +163,26 @@ public class OdometerSpinner extends View {
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+		
+		// get width and height size and mode
+	    int wSpec = MeasureSpec.getSize(widthMeasureSpec);
+	    int wMode = MeasureSpec.getMode(widthMeasureSpec);
+	     
+	    int hSpec = MeasureSpec.getSize(heightMeasureSpec);
+	    int hMode = MeasureSpec.getMode(heightMeasureSpec);
+	     
+	    int width = wSpec;
+	    int height = hSpec;
+	     
+	    // ideal height for the number display
+	    int idealHeight = (int) (wSpec * IDEAL_ASPECT_RATIO);
+	     
+	    if(idealHeight < hSpec)
+	    {
+	        height = idealHeight;
+	    }
+	     
+	    setMeasuredDimension(width, height);
 	}
 
 	@Override

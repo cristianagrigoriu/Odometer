@@ -4,9 +4,9 @@
     android:layout_height="fill_parent"
     >
     
-    <com.cg.odometer.OdometerSpinner
-       android:id="@+id/single_spinner"
+    <com.cg.odometer.Odometer
+       android:id="@+id/odometer"
        android:layout_width="fill_parent"
-       android:layout_height="fill_parent"
+       android:layout_height="wrap_content"
        />
 </LinearLayout>
