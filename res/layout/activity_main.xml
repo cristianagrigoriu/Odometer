@@ -14,8 +14,42 @@
    android:id="@+id/main_valuedisplay"
    android:layout_width="fill_parent"
    android:layout_height="wrap_content"
-   android:textSize="34dp"
+   android:textSize="34sp"
    android:textColor="#FFF"
    android:gravity="center"
    />
+    
+    <TextView
+	android:id="@+id/txtCount"	 
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content" 
+	android:layout_alignParentLeft="true"
+	android:layout_alignParentRight="true"/>
+
+	<TextView
+	android:id="@+id/textView1" 
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content" 
+	android:layout_below="@+id/txtCount" 
+	android:layout_centerHorizontal="true"/>
+ 
+	<Button	 
+	android:id="@+id/btnStart"	 
+	android:layout_width="wrap_content"	 
+	android:layout_height="wrap_content"	 
+	android:layout_alignLeft="@+id/txtCount"	 
+	android:layout_alignRight="@+id/txtCount"	 
+	android:layout_below="@+id/textView1"	 
+	android:layout_marginTop="34dp"
+	android:text="Start/Stop" />
+ 
+	<Button 
+	android:id="@+id/btnReset" 
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content" 
+	android:layout_alignLeft="@+id/btnStart" 
+	android:layout_alignRight="@+id/btnStart" 
+	android:layout_below="@+id/btnStart" 
+	android:text="Reset" />
+	
 </LinearLayout>
